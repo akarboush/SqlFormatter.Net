@@ -50,7 +50,7 @@ namespace SqlFormatter.Net
 
                 if (IsForbiddenToken(token)) return false;
             }
-            return true;
+            return false;
         }
 
         private bool IsForbiddenToken(Token token)

@@ -9,12 +9,12 @@ namespace SqlFormatter.Net
         private int _linesBetweenQueries;
         private bool _uppercase;
         private Indentation _indentation = default!;
-        private InlineBlock _inlineBlock = new();
+        private readonly InlineBlock _inlineBlock = new();
         private Params _params = default!;
         private List<Token> _tokens = new();
         protected Token? _previousReservedToken;
         private int _index;
-      
+
         protected abstract Tokenizer Tokenizer();
 
         public string Format(string query, FormatOptions options = new())
@@ -43,7 +43,7 @@ namespace SqlFormatter.Net
             for (int i = 0; i < _tokens.Count; i++)
             {
                 _index = i;
-                Token token = _tokens[i];
+                Token token = TokenOverride(_tokens[i]);
 
                 formattedQuery = token.Type switch
                 {
@@ -52,7 +52,7 @@ namespace SqlFormatter.Net
                     TokenType.ReservedTopLevel => FormatTopLevelReservedWord(token, formattedQuery),
                     TokenType.ReservedTopLevelNoIndent => FormatTopLevelReservedWordNoIndent(token, formattedQuery),
                     TokenType.ReservedNewline => FormatNewlineReservedWord(token, formattedQuery),
-                    TokenType.Reserved => FormatWithSpaces(token, formattedQuery),
+                    TokenType.Reserved => FormatWithSpaces(token, formattedQuery, setPreviousToken: true),
                     TokenType.OpenParen => FormatOpeningParentheses(token, formattedQuery),
                     TokenType.CloseParen => FormatClosingParentheses(token, formattedQuery),
                     TokenType.Placeholder => FormatPlaceholder(token, formattedQuery),
@@ -67,7 +67,7 @@ namespace SqlFormatter.Net
                     }
                 };
             }
-            return formattedQuery;
+            return formattedQuery.Trim();
         }
 
         protected virtual Token TokenOverride(Token token) => token;
@@ -78,12 +78,12 @@ namespace SqlFormatter.Net
 
             int times = _linesBetweenQueries == 0 ? 1 : _linesBetweenQueries;
 
-            return query.TrimEnd() + ToUpperIfNeeded(token) + new string('\n', times);
+            return query.TrimSpaceEnd() + ToUpperIfNeeded(token) + Environment.NewLine.Repeat(times);
         }
 
         private string FormatComma(Token token, string query)
         {
-            query = query.TrimEnd() + ToUpperIfNeeded(token) + " ";
+            query = query.TrimSpaceEnd() + ToUpperIfNeeded(token) + " ";
 
             if (_inlineBlock.IsActive() || (_previousReservedToken != null && _previousReservedToken.isLimit()))
             {
@@ -115,9 +115,9 @@ namespace SqlFormatter.Net
             {
                 Token? behindToken = TokenLookBehind();
 
-                if (behindToken is not { Type: TokenType.OpenParen | TokenType.LineComment | TokenType.Operator })
+                if (behindToken is not { Type: TokenType.OpenParen or TokenType.LineComment or TokenType.Operator })
                 {
-                    query = query.TrimEnd();
+                    query = query.TrimSpaceEnd();
                 }
             }
 
@@ -158,12 +158,15 @@ namespace SqlFormatter.Net
 
         private string FormatWithoutSpaces(Token token, string query)
         {
-            return query.TrimEnd(' ') + ToUpperIfNeeded(token);
+            return query.TrimSpaceEnd() + ToUpperIfNeeded(token);
         }
 
-        private string FormatWithSpaces(Token token, string query)
+        private string FormatWithSpaces(Token token, string query, bool setPreviousToken = false)
         {
-            SetPreviousToken(token);
+            if (setPreviousToken)
+            {
+                SetPreviousToken(token);
+            }
 
             return query + ToUpperIfNeeded(token) + " ";
         }
@@ -218,12 +221,12 @@ namespace SqlFormatter.Net
         private string ToUpperIfNeeded(Token token)
         {
             if (_uppercase &&
-                token.Type == TokenType.Reserved ||
+                (token.Type == TokenType.Reserved ||
                 token.Type == TokenType.ReservedTopLevel ||
                 token.Type == TokenType.ReservedTopLevelNoIndent ||
                 token.Type == TokenType.ReservedNewline ||
                 token.Type == TokenType.OpenParen ||
-                token.Type == TokenType.CloseParen)
+                token.Type == TokenType.CloseParen))
             {
                 return token.Value.ToUpper();
             }
@@ -232,11 +235,11 @@ namespace SqlFormatter.Net
 
         private string AddNewLine(string query)
         {
-            query = query.TrimEnd(' ');
+            query = query.TrimSpaceEnd();
 
             if (!query.EndsWith("\n"))
             {
-                query += "\n";
+                query += Environment.NewLine;
             }
 
             return query + _indentation.GetIndent();

@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlFormatter.Net.Console", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlFormatter.Net", "src\SqlFormatter.Net\SqlFormatter.Net.csproj", "{EC580D5E-C337-4959-80B9-5DA084D6D5B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C05C126C-57C6-43BF-8F20-4842D05B1036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlFormatter.Net.Test", "tests\SqlFormatter.Net.Test\SqlFormatter.Net.Test.csproj", "{5A37C674-404F-4675-BD6D-1FF6E3064806}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{1907F316-C378-4EA2-A676-B1B849D19684}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlFormatter.Net.Benchmark", "benchmark\SqlFormatter.Net.Benchmark\SqlFormatter.Net.Benchmark.csproj", "{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +33,14 @@ Global
 		{EC580D5E-C337-4959-80B9-5DA084D6D5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC580D5E-C337-4959-80B9-5DA084D6D5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC580D5E-C337-4959-80B9-5DA084D6D5B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A37C674-404F-4675-BD6D-1FF6E3064806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A37C674-404F-4675-BD6D-1FF6E3064806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A37C674-404F-4675-BD6D-1FF6E3064806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A37C674-404F-4675-BD6D-1FF6E3064806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +48,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E1CD3EAF-413E-4D6D-B29A-8CE3270B6489} = {E230DA68-95DE-483E-BB01-9125F90D8C42}
 		{EC580D5E-C337-4959-80B9-5DA084D6D5B0} = {25A3908C-AD61-44F5-97FD-5950EC7B826E}
+		{5A37C674-404F-4675-BD6D-1FF6E3064806} = {C05C126C-57C6-43BF-8F20-4842D05B1036}
+		{1FA4B0E0-A953-4EE9-8C82-78A28EB4DFD8} = {1907F316-C378-4EA2-A676-B1B849D19684}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB6458F2-72CE-401C-9E75-88A794212D60}

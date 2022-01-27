@@ -2,14 +2,14 @@
 namespace SqlFormatter.Net.Languages
 {
     public class MariaDbFormatter : Formatter
-    {
+    {     
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,
                 ReservedTopLevelWords,
                 ReservedNewlineWords,
                 ReservedTopLevelWordsNoIndent,
-                stringTypes: new string[] { "``", "''", "\"\"" },
+                stringTypes: new string[] { "\"\"", "''", "``" },
                 openParens: new string[] { "(", "CASE" },
                 closeParens: new string[] { ")", "END" },
                 indexedPlaceholderTypes: new char[] { '?' },

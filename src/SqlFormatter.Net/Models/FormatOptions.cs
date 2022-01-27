@@ -9,7 +9,7 @@
 
         public FormatOptions(
             Indent indent = Indent.TwoSpaces,
-            bool uppercase = true,
+            bool uppercase = false,
             int linesBetweenQueries = 1,
             IReadOnlyDictionary<string, string>? @params = null)
         {

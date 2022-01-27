@@ -51,7 +51,7 @@ namespace SqlFormatter.Net
             _closeParenRegex = RegexFactory.CreateParenRegex(closeParens);
             _indexedPlaceholderRegex = RegexFactory.CreatePlaceholderRegex(indexedPlaceholderTypes, "[0-9]*");
             _identNamedPlceholderRegex = RegexFactory.CreatePlaceholderRegex(namedPlaceholderTypes, "[a-zA-Z0-9._$]+");
-            _stringNamedPlceholderRegex = RegexFactory.CreatePlaceholderRegex(namedPlaceholderTypes, _stringRegex.ToString());
+            _stringNamedPlceholderRegex = RegexFactory.CreatePlaceholderRegex(namedPlaceholderTypes, RegexFactory.CreateStringPattern(stringTypes));
         }
 
 
@@ -69,11 +69,14 @@ namespace SqlFormatter.Net
                 {
                     token = getNextToken(input, previousToken: token);
 
-                    input = input[token.Value.Length..];
+                    if (token is not null)
+                    {
+                        input = input[token.Value.Length..];
 
-                    token.PrecedingWitespace = precedingWitespace;
+                        token.PrecedingWitespace = precedingWitespace;
 
-                    tokens.Add(token);
+                        tokens.Add(token);
+                    }
                 }
             }
             return tokens;
@@ -84,15 +87,16 @@ namespace SqlFormatter.Net
             int n = 0;
             for (int i = 0; i < input.Length; i++)
             {
-                n = i;
                 char c = input[i];
-                if (!char.IsWhiteSpace(c))
+                if (char.IsWhiteSpace(c))
+                    n++;
+                else
                     break;
             }
             return input[..n];
         }
 
-        private Token getNextToken(string input, Token? previousToken)
+        private Token? getNextToken(string input, Token? previousToken)
         {
             return
                 GetCommentToken(input) ??
@@ -103,7 +107,7 @@ namespace SqlFormatter.Net
                 GetNumberToken(input) ??
                 GetReservedWordToken(input, previousToken) ??
                 GetWordToken(input) ??
-                GetOperatorToken(input)!;
+                GetOperatorToken(input);
         }
 
         private Token? GetCommentToken(string input) => GetLineCommentToken(input) ?? GetBlockCommentToken(input);

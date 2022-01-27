@@ -43,7 +43,7 @@ namespace SqlFormatter.Net
 
             string pattern = @$"^((?:{string.Join('|', lineCommentTypes)}).*?)(?:\r\n|\r|\n|$)";
 
-            return Default(pattern);
+            return Create(pattern, RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
         internal static Regex CreateReservedWordRegex(string[] reservedWords)
@@ -62,7 +62,7 @@ namespace SqlFormatter.Net
         internal static Regex CreateWordRegex(string[] specialWordChars)
         {
             // https://docs.microsoft.com/en-us/dotnet/standard/base-types/character-classes-in-regular-expressions#supported-unicode-general-categories
-            var pattern = @"^([\w" + string.Join("", specialWordChars) + "]+)";
+            var pattern = @"^([\p{L}\p{M}\p{Nd}\p{Pc}\p{Cf}\p{Cs}\p{Co}" + string.Join("", specialWordChars) + "]+)";
             //var pattern = @"^([\p{L}\p{M}\p{N}\p{Pc}\p{C}" + string.Join("", specialWordChars) + "]+)";
 
             return Default(pattern);
@@ -70,33 +70,34 @@ namespace SqlFormatter.Net
 
         internal static Regex CreateStringRegex(string[] stringTypes)
         {
-            var stringBuilder = new StringBuilder();
+            return Default($"^({CreateStringPattern(stringTypes)})");
+        }
 
-            stringBuilder.Append("^(");
+        internal static string CreateStringPattern(string[] stringTypes)
+        {
+            var stringBuilder = new StringBuilder();
 
             for (int i = 0; i < stringTypes.Length; i++)
             {
-                if (i != 0 && i  != stringTypes.Length)
+                if (i != 0 && i != stringTypes.Length)
                 {
                     stringBuilder.Append('|');
                 }
                 _ = stringTypes[i] switch
                 {
                     "``" => stringBuilder.Append(@"((`[^`]*($|`))+)"),
-                    "{}" => stringBuilder.Append(@"((\\{[^\\}]*($|\\}))+)"),
-                    "[]" => stringBuilder.Append(@"((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)"),
-                    "\"\"" => stringBuilder.Append(@"((""[^""\\\\]*(?:\\\\.[^""\\\\]*)*(""|$))+)"),
-                    "''" => stringBuilder.Append(@"(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"),
-                    "N''" => stringBuilder.Append(@"((N'[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"),
-                    "U&''" => stringBuilder.Append(@"((U&'[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"),
-                    "U&\"\"" => stringBuilder.Append(@"((U&""[^""\\\\]*(?:\\\\.[^""\\\\]*)*(""|$))+)"),
-                    "$$" => stringBuilder.Append(@"((?<tag>\\$\\w*\\$)[\\s\\S]*?(?:\\k<tag>|$))"),
+                    "{}" => stringBuilder.Append(@"((\{[^\}]*($|\}))+)"),
+                    "[]" => stringBuilder.Append(@"((\[[^\]]*($|\]))(\][^\]]*($|\]))*)"),
+                    @"""""" => stringBuilder.Append(@"((""[^""\\]*(?:\\.[^""\\]*)*(""|$))+)"),
+                    "''" => stringBuilder.Append(@"(('[^'\\]*(?:\\.[^'\\]*)*('|$))+)"),
+                    "N''" => stringBuilder.Append(@"((N'[^'\\]*(?:\\.[^'\\]*)*('|$))+)"),
+                    "U&''" => stringBuilder.Append(@"((U&'[^'\\]*(?:\\.[^'\\]*)*('|$))+)"),
+                    @"U&""""" => stringBuilder.Append(@"((U&""[^""\\]*(?:\\.[^""\\]*)*(""|$))+)"),
+                    "$$" => stringBuilder.Append(@"((?<tag>\$\w*\$)[\s\S]*?(?:\k<tag>|$))"),
                     _ => throw new NotImplementedException(),
                 };
             }
-            stringBuilder.Append(")");
-
-            return Default(stringBuilder.ToString());
+            return stringBuilder.ToString();
         }
 
         internal static Regex CreateParenRegex(string[] parens)

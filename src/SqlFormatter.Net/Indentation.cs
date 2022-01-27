@@ -27,8 +27,8 @@ namespace SqlFormatter.Net
 
             return _indent switch
             {
-                Indent.TwoSpaces => new string(' ', _indentTypes.Count + 1),
-                Indent.FourSpaces => new string(' ', _indentTypes.Count + 3),
+                Indent.TwoSpaces => new string(' ', _indentTypes.Count * 2),
+                Indent.FourSpaces => new string(' ', _indentTypes.Count * 4),
                 _ => throw new NotImplementedException(),
             };
         }
