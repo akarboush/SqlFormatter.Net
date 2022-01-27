@@ -1,9 +1,4 @@
 ﻿using SqlFormatter.Net.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlFormatter.Net.Languages
 {
@@ -13,7 +8,7 @@ namespace SqlFormatter.Net.Languages
         {
         }
 
-        public override Tokenizer Tokenizer() =>
+        protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,
                 ReservedTopLevelWords,
