@@ -5,10 +5,6 @@ namespace SqlFormatter.Net.Languages
 {
     public sealed class PlSqlFormatter : Formatter
     {
-        public PlSqlFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,

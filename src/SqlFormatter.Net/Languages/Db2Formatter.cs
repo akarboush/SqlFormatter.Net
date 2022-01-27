@@ -1,14 +1,8 @@
-﻿using SqlFormatter.Net.Models;
-
+﻿
 namespace SqlFormatter.Net.Languages
 {
     public sealed class Db2Formatter : Formatter
     {
-
-        public Db2Formatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,

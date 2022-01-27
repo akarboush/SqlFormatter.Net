@@ -5,10 +5,6 @@ namespace SqlFormatter.Net.Languages
 {
     public sealed class SparkSqlFormatter : Formatter
     {
-        public SparkSqlFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
                     new Tokenizer(
                         ReservedWords,

@@ -1,13 +1,8 @@
-﻿using SqlFormatter.Net.Models;
-
+﻿
 namespace SqlFormatter.Net.Languages
 {
     public class MariaDbFormatter : Formatter
     {
-        public MariaDbFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,

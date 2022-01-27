@@ -4,10 +4,10 @@ namespace SqlFormatter.Net
 {
     public class Params
     {
-        private readonly Dictionary<string, string>? _params;
+        private readonly IReadOnlyDictionary<string, string>? _params;
         private int _index = 0;
 
-        public Params(Dictionary<string, string>? @params)
+        public Params(IReadOnlyDictionary<string, string>? @params)
         {
             _params = @params;
         }

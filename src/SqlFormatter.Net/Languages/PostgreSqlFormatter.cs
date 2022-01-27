@@ -4,10 +4,6 @@ namespace SqlFormatter.Net.Languages
 {
     public sealed class PostgreSqlFormatter : Formatter
     {
-        public PostgreSqlFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
                     new Tokenizer(
                         ReservedWords,

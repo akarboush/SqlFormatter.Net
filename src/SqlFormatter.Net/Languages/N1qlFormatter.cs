@@ -1,14 +1,9 @@
-﻿using SqlFormatter.Net.Models;
-
+﻿
 namespace SqlFormatter.Net.Languages
 {
     // For reference: http://docs.couchbase.com.s3-website-us-west-1.amazonaws.com/server/6.0/n1ql/n1ql-language-reference/index.html
     public sealed class N1qlFormatter : Formatter
     {
-
-        public N1qlFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
 
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(

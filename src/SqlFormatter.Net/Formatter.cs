@@ -6,35 +6,34 @@ namespace SqlFormatter.Net
 {
     public abstract class Formatter
     {
-        private readonly int _linesBetweenQueries;
-        private readonly bool _uppercase;
-        private readonly Indentation _indentation;
-        private readonly InlineBlock _inlineBlock;
-        private readonly Params _params;
+        private int _linesBetweenQueries;
+        private bool _uppercase;
+        private Indentation _indentation = default!;
+        private InlineBlock _inlineBlock = new();
+        private Params _params = default!;
         private List<Token> _tokens = new();
-        private Token? _previousReservedToken;
+        protected Token? _previousReservedToken;
         private int _index;
+      
+        protected abstract Tokenizer Tokenizer();
 
-        protected Formatter(FormatOptions? formatOptions)
+        public string Format(string query, FormatOptions options = new())
         {
-            formatOptions ??= new FormatOptions();
+            SetOptions(options);
 
-            _linesBetweenQueries = formatOptions.LinesBetweenQueries;
-            _uppercase = formatOptions.Uppercase;
-            _indentation = new Indentation(formatOptions.Indent);
-            _inlineBlock = new InlineBlock();
-            _params = new Params(formatOptions.Params);
-        }
-
-        public abstract Tokenizer Tokenizer();
-
-        public string Format(string query)
-        {
             _tokens = Tokenizer().Tokenize(query);
 
             string formattedQuery = GetFormattedQueryFromTokens();
 
             return formattedQuery.Trim();
+        }
+
+        private void SetOptions(FormatOptions options)
+        {
+            _linesBetweenQueries = options.LinesBetweenQueries;
+            _uppercase = options.Uppercase;
+            _indentation = new Indentation(options.Indent);
+            _params = new Params(options.Params);
         }
 
         private string GetFormattedQueryFromTokens()
@@ -70,6 +69,8 @@ namespace SqlFormatter.Net
             }
             return formattedQuery;
         }
+
+        protected virtual Token TokenOverride(Token token) => token;
 
         private string FormatQuerySeparator(Token token, string query)
         {
@@ -167,8 +168,8 @@ namespace SqlFormatter.Net
             return query + ToUpperIfNeeded(token) + " ";
         }
 
-        private Token? TokenLookBehind(int n = 1) => _tokens.ElementAtOrDefault(_index - n);
-        private Token? TokenLookAhead(int n = 1) => _tokens.ElementAtOrDefault(_index + n);
+        protected Token? TokenLookBehind(int n = 1) => _tokens.ElementAtOrDefault(_index - n);
+        protected Token? TokenLookAhead(int n = 1) => _tokens.ElementAtOrDefault(_index + n);
 
         private string FormatTopLevelReservedWordNoIndent(Token token, string query)
         {
@@ -240,7 +241,5 @@ namespace SqlFormatter.Net
 
             return query + _indentation.GetIndent();
         }
-
-
     }
 }

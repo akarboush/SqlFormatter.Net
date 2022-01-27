@@ -1,14 +1,8 @@
-﻿using SqlFormatter.Net.Models;
-
+﻿
 namespace SqlFormatter.Net.Languages
 {
     public sealed class MySqlFormatter : Formatter
     {
-
-        public MySqlFormatter(FormatOptions? formatOptions = default) : base(formatOptions)
-        {
-        }
-
         protected override Tokenizer Tokenizer() =>
             new Tokenizer(
                 ReservedWords,

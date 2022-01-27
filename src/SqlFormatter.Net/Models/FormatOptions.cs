@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SqlFormatter.Net.Models
+﻿namespace SqlFormatter.Net.Models
 {
-    public record FormatOptions
+    public record struct FormatOptions
     {
-        public string Language { get; init; }
-        public Indent Indent { get; init; }
-        public bool Uppercase { get; init; }
-        public int LinesBetweenQueries { get; init; }
-        public Dictionary<string, string>? Params { get; init; }
+        public Indent Indent { get; }
+        public bool Uppercase { get; }
+        public int LinesBetweenQueries { get; }
+        public IReadOnlyDictionary<string, string>? Params { get; }
 
         public FormatOptions(
-            string language = "sql",
             Indent indent = Indent.TwoSpaces,
             bool uppercase = true,
             int linesBetweenQueries = 1,
-            Dictionary<string, string>? @params = null)
+            IReadOnlyDictionary<string, string>? @params = null)
         {
-            Language = language;
             Indent = indent;
             Uppercase = uppercase;
             LinesBetweenQueries = linesBetweenQueries;
